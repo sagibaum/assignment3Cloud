@@ -24,7 +24,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: assignment3_art
+          name: assignment3
           path: /tmp/image/image.tar
 
   test:
@@ -33,14 +33,12 @@ jobs:
     steps:
       # Download image and run it in a container
       - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: assignment3_art
+        uses: actions/download-artifact@v3  # downloads all artifacts
 
       - name: Load Docker images from previous workflows
-        run: docker load --input assignment3_art/image.tar
+        run: docker load --input assignment3/image.tar
 
-      - name: Check assignment3_art image is loaded
+      - name: Check assignment3 image is loaded
         run: docker image ls
 
       - name: Run image in a container
