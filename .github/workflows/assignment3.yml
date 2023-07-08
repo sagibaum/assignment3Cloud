@@ -14,7 +14,9 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build and export
-        run: docker build -t assignment3_art
+        run: |
+         ls 
+         docker build -t assignment3_art
        
 
       - name: Save Docker image
