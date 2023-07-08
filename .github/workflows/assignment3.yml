@@ -19,13 +19,14 @@ jobs:
            context: .
            file: ./Dockerfile
            tags: assignment3_art:latest
-           outputs: type=docker,dest=/image.tar
+           outputs: type=docker,dest=/tmp/image.tar
         
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: assignment3
-          path: /tmp/image/image.tar
+             name: assignment3
+             path: /tmp/image.tar
+         
 
   test:
     needs: build
