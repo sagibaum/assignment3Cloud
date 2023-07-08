@@ -14,17 +14,13 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build and export
-        run: |
-         ls 
-         docker build -t assignment3_art
-       
-
-      - name: Save Docker image
-        run: |
-          mkdir -p /tmp/image
-          docker save -o /tmp/image/image.tar assignment3_art
-        working-directory: ./assignment3Cloud
-
+        uses: docker/build-push-action@v3
+        with:
+           context: .
+           file: ./Dockerfile
+           tags: assignment3_art:latest
+           outputs: type=docker,dest=/tmp/image.tar
+        
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
