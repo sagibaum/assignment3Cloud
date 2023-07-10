@@ -1,10 +1,12 @@
 import requests
 import pytest
 
+dish_ids = []
+
 # Test 1: Execute three POST /dishes requests according ti the dish_names list
 def test_post_dishes():
     dish_names = ["orange", "spaghetti", "apple pie"]
-    dish_ids = []
+
 
     for name in dish_names:
         response = requests.post("http://localhost:8000/dishes", data={"name": name})
