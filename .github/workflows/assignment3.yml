@@ -73,7 +73,8 @@ jobs:
           cd tests
           ls
           touch test_results.txt
-          pytest -v assn3_tests.py > test_results.txt
+          ls
+          pytest -v assn3_tests.py 
         
 
       - name: Upload test results
