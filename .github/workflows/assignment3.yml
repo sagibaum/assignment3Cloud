@@ -72,7 +72,8 @@ jobs:
         run: |
           pwd
           cd .. 
-          cd tests
+          pwd
+          ls
           pytest -v assn3_tests.py > test_results.txt
         
 
