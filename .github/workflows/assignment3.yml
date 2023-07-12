@@ -72,7 +72,7 @@ jobs:
         run: |
           cd tests
           ls
-          test_results.txt
+          touch test_results.txt
           pytest -v assn3_tests.py > test_results.txt
         
 
