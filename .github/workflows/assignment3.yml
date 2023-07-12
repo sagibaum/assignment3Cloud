@@ -71,7 +71,7 @@ jobs:
       - name: Test with pytest
         run: |
           run: pytest -v assignment3Cloud/tests/assn3_tests.py > test_results.txt
-        working-directory: ./
+        
 
       - name: Upload test results
         if: always()
