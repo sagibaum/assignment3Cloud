@@ -70,6 +70,7 @@ jobs:
       # Run pytest tests and upload the results
       - name: Test with pytest
         run: |
+          dir
           cd tests
           pytest -v tests/assn3_tests.py > test_results.txt
         
