@@ -1,7 +1,7 @@
 import requests
 import pytest
 
-
+print("Running tests...")
 dish_ids = []
 
 # Test 1: Execute three POST /dishes requests using the dishes "orange", "spaghetti", and "apple pie"
