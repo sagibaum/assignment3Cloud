@@ -70,9 +70,8 @@ jobs:
       # Run pytest tests and upload the results
       - name: Test with pytest
         run: |
-          cd tests
-          run pytest -v assn3_tests.py > test_results.txt
-        working-directory: /home/runner/work/assignment3Cloud
+          run: pytest -v assignment3Cloud/tests/assn3_tests.py > test_results.txt
+        working-directory: assignment3Cloud
 
       - name: Upload test results
         if: always()
