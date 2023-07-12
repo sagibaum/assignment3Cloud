@@ -72,7 +72,7 @@ jobs:
         run: |
           cd tests
           pytest -v tests/assn3_tests.py > test_results.txt
-        working-directory: ./home/runner/work/assignment3Cloud
+        
 
       - name: Upload test results
         if: always()
