@@ -1,6 +1,6 @@
 import requests
 import pytest
-from assertions import *
+
 
 dish_ids = []
 
