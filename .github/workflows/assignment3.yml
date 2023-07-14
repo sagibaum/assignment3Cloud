@@ -172,7 +172,7 @@ jobs:
 
       
       - name: read query.txt file from current directory and produce response file in /tmp/response.txt
-        run: python solver-original.py  
+        run: python query_txt_reader.py  
       
     
       - name: Upload resp file
