@@ -80,3 +80,34 @@ jobs:
         with:
           name: GH_test_results
           path: tests/test_results.txt
+
+
+  query:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Download image and run it in a container
+      - name: Run service container
+        run: docker run -d -p 8000:8000 --name my-service assignment3_art
+
+      - name: Process queries and generate response
+        run: |
+          while IFS= read -r query
+          do
+            result=$(curl -s -X POST http://localhost:8000/dishes -d "name=$query")
+            dish_id=$(echo "$result" | jq -r '.id')
+            response=$(curl -s http://localhost:8000/dishes/$dish_id)
+            calories=$(echo "$response" | jq -r '.calories')
+            sodium=$(echo "$response" | jq -r '.sodium')
+            sugar=$(echo "$response" | jq -r '.sugar')
+            echo "$query contains $calories calories, $sodium mgs of sodium, and $sugar grams of sugar" >> response.txt
+          done < tests/query.txt
+
+      - name: Upload response file
+        uses: actions/upload-artifact@v3
+        with:
+          name: response-file
+          path: response.txt
