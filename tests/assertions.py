@@ -6,10 +6,8 @@ import connectionController
 def assert_status_code(response: requests.Response, status_code: int):
     assert response.status_code == status_code
 
-
 def assert_ret_value(response: requests.Response, returned_value: any):
     assert response.json() == returned_value
-
 
 def assert_valid_added_resource(response: requests.Response):
     assert response.status_code == 201
@@ -19,7 +17,6 @@ def assert_valid_added_resource(response: requests.Response):
     print(response.json())
     sys.stdout.flush()
     assert response.json() > VALID_RETURNED_RESOURCE_ID
-
 
 def assert_not_existed_meal(meal_identifier: any) -> None:
     response = connectionController.http_get(f"meals/{meal_identifier}")
