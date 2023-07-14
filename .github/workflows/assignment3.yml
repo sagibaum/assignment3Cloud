@@ -7,6 +7,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
+      - name: create log file
+        run: | 
+          echo $(date -Iminutes) > /tmp/log
+          echo Sagi Baum & Chen Ulfan >> /tmp/log
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -20,21 +26,52 @@ jobs:
            file: ./Dockerfile
            tags: assignment3_art:latest
            outputs: type=docker,dest=/tmp/image.tar
+      
+      - name: see if image.tar is in /tmp
+        run: ls /tmp
+
+      - name: update log file on success
+        if: success()
+        run: echo image successfully built >> /tmp/log
+
+      - name: update log file on failure
+        if: failure()
+        run: echo image not able to be built  >> /tmp/log
         
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-             name: assignment3
-             path: /tmp/image.tar
-         
+            name: assignment3
+            path: /tmp/image.tar
+
+      - name: Upload log file (always, even on build failure)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+            name: log
+            path: /tmp/log   
 
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
       # Download image and run it in a container
-      - name: Download artifact
-        uses: actions/download-artifact@v3  # downloads all artifacts
+      - name: Download image artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: assignment3
+          path: /tmp
+
+      - name: Download log artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: log
+          path: /tmp  # this is directory to put artifact (log)
+
+      - name: list /tmp directory and cat log
+        run: |
+          ls /tmp
+          cat /tmp/logs
 
       - name: Load Docker images from previous workflows
         run: docker load --input assignment3/image.tar
@@ -44,6 +81,14 @@ jobs:
 
       - name: Run image in a container
         run: docker run -p8000:8000 assignment3_art &
+
+      - name: print to log if container was successfully started
+        if: success()
+        run: echo Container up and running >> /tmp/log
+
+      - name: print to log if container failed to launch
+        if: failure()
+        run: echo Container failed to run >> /tmp/log
 
       - name: Check container is running
         run: docker ps
@@ -72,7 +117,15 @@ jobs:
           cd tests
           touch test_results.txt
           pytest -v assn3_tests.py > test_results.txt 
-        
+      
+      - name: update log file on success
+        if: success()
+        run: echo tests succeeded >> /tmp/log
+
+      - name: update log file on failure
+        if: failure()
+        run: echo tests failed >> /tmp/log
+
       # Upload test results
       - name: Upload test results
         if: always()
@@ -81,17 +134,31 @@ jobs:
           name: GH_test_results
           path: tests/test_results.txt
 
+      - name: Upload log file (always, even on build failure)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: log
+          path: /tmp/log
 
   query:
     runs-on: ubuntu-latest
     needs: test
     steps:
-  # Download image and run it in a container
-      - name: Download artifact
-        uses: actions/download-artifact@v3  # downloads all artifacts
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Load Docker images from previous workflows
-        run: docker load --input assignment3/image.tar
+      - name: Download image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: assignment3
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load --input /tmp/image.tar
+
+     # - name: Load Docker images from previous workflows
+     #  run: docker load --input assignment3/image.tar
 
       - name: Check assignment3 image is loaded
         run: docker image ls
@@ -102,22 +169,14 @@ jobs:
       - name: Check container is running
         run: docker ps
 
-
-      - name: Process queries and generate response
-        run: |
-          while IFS= read -r query
-          do
-            result=$(curl -s -X POST http://localhost:8000/dishes -d "name=$query")
-            dish_id=$(echo "$result" | jq -r '.id')
-            response=$(curl -s http://localhost:8000/dishes/$dish_id)
-            calories=$(echo "$response" | jq -r '.calories')
-            sodium=$(echo "$response" | jq -r '.sodium')
-            sugar=$(echo "$response" | jq -r '.sugar')
-            echo "$query contains $calories calories, $sodium mgs of sodium, and $sugar grams of sugar" >> response.txt
-          done < tests/query.txt
-
-      - name: Upload response file
+      
+      - name: read query.txt file from current directory and produce response file in /tmp/response.txt
+        run: python solver-original.py  
+      
+    
+      - name: Upload resp file
+        if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: response-file
-          path: response.txt
+          name: response
+          path: /tmp/response.txt
