@@ -1,12 +1,13 @@
 import requests
 import sys
-from Ninja_key import NINJA_API_KEY
+
+Ninja_API_Key = "Vsrai71RbGrBh7ZROuzVVg==oHMTSk8Nrfkd4REf"
 
 
 def get_food_info(food):
         api_url = 'https://api.api-ninjas.com/v1/nutrition?query={}'.format(food)
         try:
-            response = requests.get(api_url, headers={'X-Api-Key': NINJA_API_KEY})
+            response = requests.get(api_url, headers={'X-Api-Key': Ninja_API_Key})
         except:
             print("Error from api.api-ninjas.com/v1/nutrition.  response code = ", response.status_code)
             print("response text = ", response.text)
