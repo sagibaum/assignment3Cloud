@@ -75,7 +75,7 @@ jobs:
           cat /tmp/log
 
       - name: Load Docker images from previous workflows
-        run: docker load --input assignment3/tmp/image.tar
+        run: docker load --input /tmp/image.tar
 
       - name: Check assignment3 image is loaded
         run: docker image ls
