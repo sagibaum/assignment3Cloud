@@ -72,6 +72,7 @@ jobs:
         run: |
           pwd
           ls /tmp
+          cat /tmp/log
 
       - name: Load Docker images from previous workflows
         run: docker load --input assignment3/image.tar
