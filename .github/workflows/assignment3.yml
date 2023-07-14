@@ -71,9 +71,9 @@ jobs:
         run: |
           cd tests
           touch test_results.txt
-          pytest -v assn3_tests.py 
+          pytest -v assn3_tests.py > test_results.txt 
         
-
+      # Upload test results
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
