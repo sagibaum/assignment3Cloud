@@ -9,12 +9,11 @@ def test_insert_three_dishes():
         response = connectionController.http_post("dishes", data={'name': dish_name})
         assert response.status_code == 201
         dish_ids.append(response.json())
-        print(response.json())
 
     assert len(set(dish_ids)) == len(dish_ids)
 
 def test_get_orange_dish():
-    response = connectionController.http_get("/dishes/1")
+    response = connectionController.http_get("dishes/1")
     assert_status_code(response, 200)
     sodium_field = response.json().get("sodium")
     assert sodium_field is not None and 0.9 <= sodium_field <= 1.1
