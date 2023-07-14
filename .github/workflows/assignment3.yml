@@ -4,6 +4,7 @@ on:
   push
 
 jobs:
+#This job will build the image and upload it as an artifact  
   build:
     runs-on: ubuntu-latest
     steps:
@@ -51,11 +52,12 @@ jobs:
             name: log
             path: /tmp/log   
 
+#This job will run the container and run the tests
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Download image and run it in a container
+      # Download image artifacts and run it in a container
       - name: Download image artifact from build job
         uses: actions/download-artifact@v3
         with:
@@ -66,9 +68,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: log
-          path: /tmp  # this is directory to put artifact (log)
-
-      - name: list /tmp directory and cat log
+          path: /tmp 
+    
+     #check if image.tar ,log downloaded successfully     
+      - name: list /tmp directory and cat log file to see if it was downloaded
         run: |
           pwd
           ls /tmp
@@ -142,6 +145,7 @@ jobs:
           name: log
           path: /tmp/log
 
+#This job will run the query and produce the response file
   query:
     runs-on: ubuntu-latest
     needs: test
@@ -157,9 +161,6 @@ jobs:
 
       - name: Load Docker image
         run: docker load --input /tmp/image.tar
-
-     # - name: Load Docker images from previous workflows
-     #  run: docker load --input assignment3/image.tar
 
       - name: Check assignment3 image is loaded
         run: docker image ls
