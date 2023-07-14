@@ -86,12 +86,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # Download image and run it in a container
+      - name: Download artifact
+        uses: actions/download-artifact@v3  # downloads all artifacts
 
-      # Download image and run it in a container
-      - name: Run service container
-        run: docker run -d -p 8000:8000 --name my-service assignment3_art
+      - name: Load Docker images from previous workflows
+        run: docker load --input assignment3/image.tar
+
+      - name: Check assignment3 image is loaded
+        run: docker image ls
+
+      - name: Run image in a container
+        run: docker run -p8000:8000 assignment3_art &
+
+      - name: Check container is running
+        run: docker ps
+
 
       - name: Process queries and generate response
         run: |
