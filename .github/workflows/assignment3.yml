@@ -70,8 +70,9 @@ jobs:
 
       - name: list /tmp directory and cat log
         run: |
+          pwd
           ls /tmp
-          cat /tmp/logs
+          cat logs
 
       - name: Load Docker images from previous workflows
         run: docker load --input assignment3/image.tar
