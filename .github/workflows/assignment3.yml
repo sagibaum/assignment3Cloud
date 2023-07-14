@@ -70,9 +70,7 @@ jobs:
       - name: Test with pytest
         run: |
           cd tests
-          ls
           touch test_results.txt
-          ls
           pytest -v assn3_tests.py 
         
 
@@ -81,4 +79,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: GH_test_results
-          path: ./assignment3Cloud/test_results.txt
+          path: ./assignment3Cloud/tests/test_results.txt
